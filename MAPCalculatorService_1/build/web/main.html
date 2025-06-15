@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clinic ABC - Medical Calculators</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+      body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e6e6fa 100%);
+  color: #333;
+}
+
+header {
+  text-align: center;
+  padding: 2rem 1rem 1rem 1rem;
+  background: #e0e7ff;
+  box-shadow: 0 2px 8px rgba(100, 100, 200, 0.04);
+}
+
+header h1 {
+  color: #7c3aed;
+  margin-bottom: 0.5rem;
+  font-size: 2.2rem;
+}
+
+header p {
+  color: #555;
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight:400;
+}
+
+.intro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem 1rem 1rem;
+  gap: 2rem;
+  background: rgba(124, 58, 237, 0.03);
+
+}
+
+.intro-text {
+  max-width: 500px;
+    
+}
+
+.intro-text h2 {
+  color: #5b21b6;
+  margin-bottom: 0.5rem;
+}
+
+.intro-text p {
+  color: #444;
+  margin-bottom: 1rem;
+  font-weight:400;
+}
+
+.badges {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.3em 0.8em;
+  border-radius: 16px;
+  font-size: 0.9em;
+  font-weight: 500;
+  border: 1px solid #eee;
+}
+
+.badge.blue { background: #e0e7ff; color: #3730a3; }
+.badge.purple { background: #ede9fe; color: #7c3aed; }
+.badge.pink { background: #fce7f3; color: #be185d; }
+
+.intro-img img {
+  width: 260px;
+  max-width: 100%;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.10);
+}
+
+.calculators {
+  text-align: center;
+  padding: 2rem 1rem 1rem 1rem;
+}
+
+.calculators h3 {
+  color: #222;
+  margin-bottom: 0.2rem;
+}
+
+.calculators p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.calculator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.calculator-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(124, 58, 237, 0.07);
+  padding: 1.5rem 1rem 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1.5px solid #ede9fe;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+.calculator-card:hover {
+  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.13);
+  border: 1.5px solid #a5b4fc;
+}
+
+.icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.7rem;
+}
+
+.calculator-card h4 {
+  margin: 0.2rem 0 0.5rem 0;
+  color: #7c3aed;
+}
+
+.calculator-card p {
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.calculator-card button {
+  background: linear-gradient(90deg, #7c3aed 0%, #6366f1 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7em 1.5em;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.calculator-card button:hover {
+  background: linear-gradient(90deg, #6366f1 0%, #7c3aed 100%);
+}
+
+footer {
+  background: #f5f3ff;
+  margin-top: 2rem;
+  padding: 2rem 1rem 1rem 1rem;
+  text-align: center;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -2px 12px rgba(124, 58, 237, 0.04);
+}
+
+footer h5 {
+  color: #7c3aed;
+  margin-bottom: 0.5rem;
+}
+
+footer p {
+  color: #444;
+  text-wrap:balance;}
+
+ footer small {
+      display: block; /* MODIFIED: Make it a block element */
+      margin-top: 1rem; /* MODIFIED: Add space above */
+      color: #5B21B6; /* MODIFIED: A professional, distinct purple */
+      font-weight: 500; /* MODIFIED: Medium weight */
+      font-size: 0.85em; /* MODIFIED: Slightly adjusted size */
+      letter-spacing: 0.2px; /* MODIFIED: Subtle letter spacing */
+    }
+      </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to Super Health Group</h1>
+    <p>
+      We provide comprehensive medical calculators and assessment tools to help healthcare professionals make informed decisions and improve patient care outcomes.
+    </p>
+  </header>
+
+  <section class="intro">
+    <div class="intro-text">
+      <h2>Professional Medical Assessment Tools</h2>
+      <p>
+        Our suite of evidence-based calculators provides accurate assessments for various health parameters, helping healthcare professionals deliver better patient care with confidence.
+      </p>
+      <div class="badges">
+        <span class="badge blue">Evidence-Based</span>
+        <span class="badge purple">Clinically Validated</span>
+        <span class="badge pink">Professional Grade</span>
+      </div>
+    </div>
+    <div class="intro-img">
+      <img src="image.png" alt="Medical Assessment Illustration">
+    </div>
+  </section>
+
+  <section class="calculators">
+    <h3>Choose Your Calculator</h3>
+    <p>Select from our comprehensive suite of medical assessment tools</p>
+    <div class="calculator-grid">
+      <div class="calculator-card">
+        <div class="icon">⚖️</div>
+        <h4>BMI Calculator</h4>
+        <p>Calculate Body Mass Index and assess weight status</p>
+         <a href="bmi-calculator.html"><button>Open Calculator</button></a>
+      </div>
+      <div class="calculator-card">
+        <div class="icon">❤️</div>
+        <h4>MAP Calculator</h4>
+        <p>Calculate Mean Arterial Pressure and assess hypertension risk</p>
+        <a href="map-calculator.html"><button>Open Calculator</button></a>
+      </div>
+      <div class="calculator-card">
+        <div class="icon">🔥</div>
+        <h4>BMR Calculator</h4>
+        <p>Calculate Basal Metabolic Rate for energy needs</p>
+        <a href="bmr-calculator.html"><button>Open Calculator</button></a>
+      </div>
+      <div class="calculator-card">
+        <div class="icon">🏃‍♂️</div>
+        <h4>TDEE Calculator</h4>
+        <p>Estimate Total Daily Energy Expenditure</p>
+        <a href="TDEEClient"><button>Open Calculator</button></a>
+      </div>
+      <div class="calculator-card">
+        <div class="icon">💪</div>
+        <h4>Body Fat % Calculator</h4>
+        <p>Calculate body fat percentage based on measurements</p>
+        <a href="bodyfatpercentage-calculator.html"><button>Open Calculator</button></a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <h5>Trusted by Healthcare Professionals</h5>
+    <p>
+      Our calculators are designed following established medical guidelines and formulas. They serve as aids in clinical decision-making and should always be used in conjunction with professional medical judgment and patient assessment.
+    </p>
+    <small>
+      For healthcare professionals • Evidence-based calculations • Clinically validated
+    </small>
+  </footer>
+</body>
+</html>

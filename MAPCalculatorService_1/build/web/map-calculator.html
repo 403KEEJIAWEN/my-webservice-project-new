@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAP Calculator - Mean Arterial Pressure & Hypertension Risk Assessment</title>
+    <style>
+        /* Same CSS as before - keeping it unchanged for brevity */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container a{
+            
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: #666;
+            text-decoration: none;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            color: #333;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .heart-icon {
+            color: #e74c3c;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e1e8ed;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #e74c3c;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #c0392b;
+        }
+
+        .btn-primary:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .results-card {
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .results-placeholder {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .heart-placeholder {
+            font-size: 60px;
+            color: #e1e8ed;
+            margin-bottom: 15px;
+        }
+
+        .results-content {
+            display: none;
+        }
+
+        .map-result {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .map-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .risk-normal {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .risk-elevated {
+            background: #fef9e7;
+            color: #f39c12;
+        }
+
+        .risk-stage1 {
+            background: #fdf2e9;
+            color: #e67e22;
+        }
+
+        .risk-stage2 {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .risk-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .formula {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .category-item {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .category-normal {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .category-elevated {
+            background: #fef9e7;
+            color: #f39c12;
+        }
+
+        .category-stage1 {
+            background: #fdf2e9;
+            color: #e67e22;
+        }
+
+        .category-stage2 {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .disclaimer {
+            background: #fff9c4;
+            border: 1px solid #f1c40f;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .disclaimer-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .disclaimer-text {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.4;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #666;
+        }
+
+        .error-message {
+            background: #fadbd8;
+            color: #e74c3c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="main.html" class="back-btn">← Back to Home</a>
+            <div class="title">
+                <span class="heart-icon">♥</span>
+                MAP Calculator
+            </div>
+            <div class="subtitle">Mean Arterial Pressure & Hypertension Risk Assessment</div>
+        </div>
+
+        <div class="main-content">
+            <!-- Input Card -->
+            <div class="card">
+                <h2 class="card-title">Blood Pressure Input</h2>
+                <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+                    Enter systolic and diastolic blood pressure values in mmHg
+                </p>
+                
+                <form id="mapForm">
+                    <div class="form-group">
+                        <label class="form-label">Systolic Pressure (mmHg)</label>
+                        <input type="number" id="systolicPressure" name="systolicPressure" 
+                               class="form-input" placeholder="eg. 120" min="1" max="300">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Diastolic Pressure (mmHg)</label>
+                        <input type="number" id="diastolicPressure" name="diastolicPressure" 
+                               class="form-input" placeholder="eg. 80" min="1" max="200">
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" id="calculateBtn">
+                            Calculate MAP
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="clearBtn">
+                            Clear
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="error-message" id="errorMessage"></div>
+                <div class="loading" id="loading">Calculating...</div>
+            </div>
+
+            <!-- Results Card -->
+            <div class="card results-card">
+                <h2 class="card-title">Results & Risk Assessment</h2>
+                <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+                    Mean Arterial Pressure calculation and hypertension risk evaluation
+                </p>
+                
+                <div class="results-placeholder" id="placeholder">
+                    <div class="heart-placeholder">♥</div>
+                    <div>Enter blood pressure values to calculate MAP and assess risk</div>
+                </div>
+                
+                <div class="results-content" id="resultsContent">
+                    <div class="map-result" id="mapValue">--</div>
+                    <div class="map-label">Mean Arterial Pressure (mmHg)</div>
+                    <div class="risk-badge" id="riskBadge">--</div>
+                    <div class="risk-description" id="riskDescription">--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <h3 class="card-title">About MAP Calculator</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <strong>Formula Used:</strong>
+                <div class="formula">
+                    MAP = Diastolic BP + 1/3 × (Systolic BP - Diastolic BP)
+                </div>
+            </div>
+            
+            <div>
+                <strong>24 hr. MAP Categories:</strong>
+                <div class="categories-grid">
+                    <div class="category-item category-normal">
+                        <strong>Normal:</strong><br>
+                        &lt; 90 mmHg
+                    </div>
+                    <div class="category-item category-elevated">
+                        <strong>Elevated:</strong><br>
+                        90 to &lt; 92 mmHg
+                    </div>
+                    <div class="category-item category-stage1">
+                        <strong>Stage 1 Hypertension:</strong><br>
+                        92 to &lt; 96 mmHg
+                    </div>
+                    <div class="category-item category-stage2">
+                        <strong>Stage 2 Hypertension:</strong><br>
+                        &gt; 96 mmHg
+                    </div>
+                </div>
+            </div>
+            
+            <div class="disclaimer">
+                <div class="disclaimer-title">Disclaimer:</div>
+                <div class="disclaimer-text">
+                    This calculator is for educational and clinical reference purposes. Always consider the complete clinical 
+                    picture and follow established medical guidelines when making treatment decisions.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('mapForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateMAP();
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            clearForm();
+        });
+
+   function calculateMAP() {
+    const systolic = document.getElementById('systolicPressure').value;
+    const diastolic = document.getElementById('diastolicPressure').value;
+    
+    // Hide previous error messages
+    document.getElementById('errorMessage').style.display = 'none';
+    
+    // Validate inputs
+    if (!systolic || !diastolic) {
+        showError('Please enter both systolic and diastolic pressure values.');
+        return;
+    }
+    
+    if (parseInt(systolic) <= parseInt(diastolic)) {
+        showError('Systolic pressure must be greater than diastolic pressure.');
+        return;
+    }
+    
+    // Show loading
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('calculateBtn').disabled = true;
+    
+    // Create URL-encoded form data
+    const formData = new URLSearchParams();
+    formData.append('systolicPressure', systolic);
+    formData.append('diastolicPressure', diastolic);
+    
+    // Make AJAX request - UPDATE THIS LINE
+    fetch('api/calculate-map', {  // Added context path
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error('HTTP error! status: ' + response.status);
+        }
+        
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data:', data);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('calculateBtn').disabled = false;
+        
+        if (data.success) {
+            displayResults(data);
+        } else {
+            showError(data.error || 'An error occurred while calculating MAP.');
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('calculateBtn').disabled = false;
+        showError('Error: ' + error.message);
+    });
+}
+        function displayResults(data) {
+            // Hide placeholder and show results
+            document.getElementById('placeholder').style.display = 'none';
+            document.getElementById('resultsContent').style.display = 'block';
+            
+            // Update MAP value
+            document.getElementById('mapValue').textContent = data.calculatedMAP.toFixed(2);
+            
+            // Update risk badge
+            const riskBadge = document.getElementById('riskBadge');
+            riskBadge.textContent = data.riskCategory;
+            
+            // Set appropriate risk class
+            riskBadge.className = 'risk-badge';
+            if (data.riskCategory === 'Normal') {
+                riskBadge.classList.add('risk-normal');
+            } else if (data.riskCategory === 'Elevated') {
+                riskBadge.classList.add('risk-elevated');
+            } else if (data.riskCategory === 'Stage 1 Hypertension') {
+                riskBadge.classList.add('risk-stage1');
+            } else if (data.riskCategory === 'Stage 2 Hypertension') {
+                riskBadge.classList.add('risk-stage2');
+            }
+            
+            // Update risk description
+            document.getElementById('riskDescription').textContent = data.hypertensionRisk;
+        }
+
+        function clearForm() {
+            document.getElementById('systolicPressure').value = '';
+            document.getElementById('diastolicPressure').value = '';
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            // Hide results and show placeholder
+            document.getElementById('resultsContent').style.display = 'none';
+            document.getElementById('placeholder').style.display = 'block';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

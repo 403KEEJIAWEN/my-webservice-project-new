@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMR Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        
+        /* styles.css */
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border-left: 5px solid #28a745;
+            color: #155724;
+            font-size: 16px;
+        }
+
+        .evaluation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        .evaluation-table th, .evaluation-table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .evaluation-table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .evaluation-metrics {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BMR Calculator</h1>
+        
+        
+
+        <!-- Your original form and result section -->
+        <form id="bmrForm">
+            <label for="icNumber">IC Number (12 digits):</label>
+            <input type="text" id="icNumber" name="icNumber" required maxlength="12">
+
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" name="weight" step="0.1" required>
+
+            <label for="height">Height (cm):</label>
+            <input type="number" id="height" name="height" step="0.1" required>
+
+            <label>Gender:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="gender" value="male" required> Male</label>
+                <label><input type="radio" name="gender" value="female"> Female</label>
+            </div>
+
+            <button type="submit">Calculate BMR</button>
+        </form>
+
+        <div id="result" class="result-box"></div>
+    </div>
+    
+    <!-- Add Evaluation Metrics Section -->
+        <div class="evaluation-metrics">
+            <h3>📊 BMR Categories & Interpretation</h3>
+            <table class="evaluation-table">
+                <tr>
+                    <th>Category</th>
+                    <th>Male Range (cal/day)</th>
+                    <th>Female Range (cal/day)</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Very Low</td>
+                    <td>< 1500</td>
+                    <td>< 1200</td>
+                    <td>Potentially undernourished or very low metabolism</td>
+                </tr>
+                <tr>
+                    <td>Low</td>
+                    <td>1500–1800</td>
+                    <td>1200–1500</td>
+                    <td>Slightly below average for height/age</td>
+                </tr>
+                <tr>
+                    <td>Normal</td>
+                    <td>1801–2400</td>
+                    <td>1501–2000</td>
+                    <td>Healthy baseline metabolic rate</td>
+                </tr>
+                <tr>
+                    <td>High</td>
+                    <td>2401–2800</td>
+                    <td>2001–2400</td>
+                    <td>Higher than average, often muscular individuals</td>
+                </tr>
+                <tr>
+                    <td>Very High</td>
+                    <td>> 2800</td>
+                    <td>> 2400</td>
+                    <td>Very high muscle mass or hypermetabolism</td>
+                </tr>
+            </table>
+        </div>
+
+    <!-- Your original script remains unchanged -->
+    <script>
+        document.getElementById('bmrForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const icNumber = document.getElementById('icNumber').value;
+            const weight = document.getElementById('weight').value;
+            const height = document.getElementById('height').value;
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+
+            const soapRequest = `
+                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bmr="http://bmr.com/">
+                   <soapenv:Header/>
+                   <soapenv:Body>
+                      <bmr:calculateBMR>
+                         <icNumber>${icNumber}</icNumber>
+                         <weight>${weight}</weight>
+                         <height>${height}</height>
+                         <gender>${gender}</gender>
+                      </bmr:calculateBMR>
+                   </soapenv:Body>
+                </soapenv:Envelope>
+            `;
+
+            fetch('http://localhost:8080/PersonalHealthandFitness/BMRcalc', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/xml; charset=utf-8',
+                    'SOAPAction': '"calculateBMR"'
+                },
+                body: soapRequest
+            })
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(data, "text/xml");
+                const resultText = xml.getElementsByTagName("return")[0]?.textContent || "Error parsing result.";
+                document.getElementById('result').innerHTML = `<strong>${resultText}</strong>`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = "<strong>Error calling the web service.</strong>";
+            });
+        });
+    </script>
+</body>
+</html>

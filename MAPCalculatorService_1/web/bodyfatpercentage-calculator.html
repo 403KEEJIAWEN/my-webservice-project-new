@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Body Fat Percentage Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            color: #003366;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            padding: 5px;
+            width: 200px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: #003366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result, #formula {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Body Fat Percentage Calculator</h1>
+
+    <div id="formula">
+        <h3>Formula:</h3>
+        <p>For men: <strong>BFP = (1.20 × BMI) + (0.23 × Age) − 16.2</strong></p>
+        <p>For women: <strong>BFP = (1.20 × BMI) + (0.23 × Age) − 5.4</strong></p>
+        <p class="note">BMI = weight (kg) / height² (m²)</p>
+    </div>
+
+    <form id="bfpForm" onsubmit="return calculateBFP();">
+        <label for="icNumber">IC Number (e.g. 010203-01-1234):</label>
+        <input type="text" id="icNumber" name="icNumber" required>
+
+        <label for="weight">Weight (kg):</label>
+        <input type="number" step="0.1" id="weight" name="weight" required min="30" max="300">
+
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" name="height" required min="100" max="250">
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="">-- Select --</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <div id="result"></div>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 2em;
+        background-color: #f0f8ff;
+    }
+    h1 {
+        color: #005A32; /* Changed from blue to dark green */
+    }
+    label {
+        display: block;
+        margin-top: 10px;
+    }
+    input, select {
+        padding: 5px;
+        width: 200px;
+    }
+    button {
+        margin-top: 15px;
+        padding: 8px 16px;
+        background-color: #005A32; /* Changed button color */
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    #result, #formula, #reference {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+    .note {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 10px;
+    }
+    .error {
+        color: red;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #005A32; /* Updated table header color */
+        color: white;
+    }
+</style>
+
+<div id="reference">
+    <h2>Reference</h2>
+    <h3>The American Council on Exercise Body Fat Categorization</h3>
+    <table>
+        <tr>
+            <th>Description</th>
+            <th>Women</th>
+            <th>Men</th>
+        </tr>
+        <tr><td>Essential fat</td><td>10-13%</td><td>2-5%</td></tr>
+        <tr><td>Athletes</td><td>14-20%</td><td>6-13%</td></tr>
+        <tr><td>Fitness</td><td>21-24%</td><td>14-17%</td></tr>
+        <tr><td>Average</td><td>25-31%</td><td>18-24%</td></tr>
+        <tr><td>Obese</td><td>32%+</td><td>25%+</td></tr>
+    </table>
+
+    <h3>Jackson & Pollock Ideal Body Fat Percentages</h3>
+    <table>
+        <tr>
+            <th>Age</th>
+            <th>Women</th>
+            <th>Men</th>
+        </tr>
+        <tr><td>20-24</td><td>17.7%</td><td>8.5%</td></tr>
+        <tr><td>25-29</td><td>18.4%</td><td>10.5%</td></tr>
+        <tr><td>30-34</td><td>19.3%</td><td>12.7%</td></tr>
+        <tr><td>35-39</td><td>21.5%</td><td>13.7%</td></tr>
+        <tr><td>40-44</td><td>22.2%</td><td>15.3%</td></tr>
+        <tr><td>45-49</td><td>22.9%</td><td>16.4%</td></tr>
+        <tr><td>50-54</td><td>25.2%</td><td>18.9%</td></tr>
+        <tr><td>55+</td><td>26.3%</td><td>20.9%</td></tr>
+    </table>
+</div>
+
+
+    <script>
+        function calculateBFP() {
+            // Get form values
+            const icNumber = document.getElementById("icNumber").value;
+            const weight = parseFloat(document.getElementById("weight").value);
+            const height = parseFloat(document.getElementById("height").value);
+            const gender = document.getElementById("gender").value;
+
+            // Validate inputs
+            if (isNaN(weight) || isNaN(height)) {
+                document.getElementById("result").innerHTML = 
+                    '<span class="error">Please enter valid weight and height</span>';
+                return false;
+            }
+
+            // Show loading state
+            document.getElementById("result").textContent = "Calculating...";
+
+            // Prepare SOAP request
+            const soapMessage =
+                `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bfp="http://java.Bfp/">
+                    <soapenv:Header/>
+                    <soapenv:Body>
+                        <bfp:calculateBodyFat>
+                            <icNumber>${icNumber}</icNumber>
+                            <weight>${weight}</weight>
+                            <height>${height}</height>
+                            <gender>${gender}</gender>
+                        </bfp:calculateBodyFat>
+                    </soapenv:Body>
+                </soapenv:Envelope>`;
+
+            // Try different endpoints
+            const endpoints = [
+    "http://localhost:8080/PersonalHealthandFitness/BodyPercentageCalculator"
+        ];
+            const tryEndpoint = (index) => {
+                if (index >= endpoints.length) {
+                    document.getElementById("result").innerHTML = 
+                        '<span class="error">Could not connect to service. Please try again later.</span>';
+                    return;
+                }
+
+                fetch(endpoints[index], {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "text/xml;charset=UTF-8",
+                        "SOAPAction": "http://Bfp.java/calculateBodyFat"
+                    },
+                    body: soapMessage
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    // Parse XML response
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(data, "text/xml");
+                    
+                    // Check for SOAP fault
+                    const fault = xmlDoc.getElementsByTagName("faultstring")[0];
+                    if (fault) {
+                        throw new Error(fault.textContent);
+                    }
+                    
+                    // Get result
+                    const returnNode = xmlDoc.getElementsByTagName("return")[0];
+                    if (returnNode) {
+                        document.getElementById("result").innerHTML = 
+                            returnNode.textContent.replace(/\n/g, "<br>");
+                    } else {
+                        throw new Error("No valid response from server");
+                    }
+                })
+                .catch(err => {
+                    console.error("Error with endpoint " + endpoints[index], err);
+                    tryEndpoint(index + 1);
+                });
+            };
+
+            // Start with first endpoint
+            tryEndpoint(0);
+
+            return false; // Prevent form submission
+        }
+    </script>
+</body>
+</html>

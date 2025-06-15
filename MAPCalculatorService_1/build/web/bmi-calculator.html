@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            background-color: #002244;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1,h3 {
+            text-align: center;
+            color: #ffffff;
+        }
+        
+         h5 {
+            text-align: center;
+            color: #002244;
+        }
+        .container {
+            max-width: 480px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #002244;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #002244;
+            color: white;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #003366;
+        }
+
+        .result {
+            background-color: #f3f3f3;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .table-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #002244;
+            color: white;
+        }
+
+        td:nth-child(2) {
+            color: green;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffe6e6;
+            border-radius: 5px;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e8f0fe;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>BMI Calculator</h1>
+    <h3>Formula: BMI = Weight (kg) / [Height (m)]²</h3>
+
+    <div class="container">
+        <h2>Enter Your Details</h2>
+        <form id="bmiForm">
+            <label>Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label>IC Number (12 digits):</label>
+            <input type="text" id="icNumber" name="icNumber" maxlength="12" pattern="\d{12}" required>
+
+            <label>Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="">-- Select Gender --</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+
+            <label>Height (cm):</label>
+            <input type="number" step="0.1" id="height" name="height" min="1" max="300" required>
+
+            <label>Weight (kg):</label>
+            <input type="number" step="0.1" id="weight" name="weight" min="1" max="500" required>
+
+            <button type="submit">Calculate BMI</button>
+        </form>
+
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="table-container">
+        <h2 style="text-align:center;">BMI Category Reference</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>BMI Range</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Underweight</td>
+                <td>&lt; 18.5</td>
+                <td>Too little body weight for your height</td>
+            </tr>
+            <tr>
+                <td>Normal weight</td>
+                <td>18.5 - 24.9</td>
+                <td>Healthy weight range for your height</td>
+            </tr>
+            <tr>
+                <td>Overweight</td>
+                <td>25 - 29.9</td>
+                <td>Higher than healthy weight range</td>
+            </tr>
+            <tr>
+                <td>Obese</td>
+                <td>30 and above</td>
+                <td>Too much body fat for your height</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('bmiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const icNumber = document.getElementById('icNumber').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const weight = document.getElementById('weight').value.trim();
+            const height = document.getElementById('height').value.trim();
+            const gender = document.getElementById('gender').value.trim();
+
+            // Validate IC number format before sending
+            if (!/^\d{12}$/.test(icNumber)) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<p class="error-message">IC Number must be exactly 12 digits. You entered: "${icNumber}" (${icNumber.length} characters)</p>`;
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            const soapRequest = `<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bmi="http://bmi.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <bmi:calculateBMI>
+            <icNumber>${icNumber}</icNumber>
+            <name>${name}</name>
+            <gender>${gender}</gender>
+            <weight>${weight}</weight>
+            <heightCm>${height}</heightCm>
+        </bmi:calculateBMI>
+    </soapenv:Body>
+</soapenv:Envelope>`;
+
+            fetch('http://localhost:8080/PersonalHealthandFitness/BMICalculation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/xml; charset=utf-8',
+                    'SOAPAction': ''
+                },
+                body: soapRequest
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(data, "text/xml");
+
+                // Check for parsing errors
+                const parseError = xml.getElementsByTagName("parsererror")[0];
+                if (parseError) {
+                    throw new Error("XML parsing error: " + parseError.textContent);
+                }
+
+                // Check for SOAP fault
+                const fault = xml.getElementsByTagName("soap:Fault")[0] ||
+                            xml.getElementsByTagName("faultstring")[0] ||
+                            xml.getElementsByTagName("S:Fault")[0] ||
+                            xml.getElementsByTagName("ns:Fault")[0];
+                            
+                if (fault) {
+                    throw new Error(fault.textContent);
+                }
+
+                // Try multiple possible tag names for the result
+                let resultText = null;
+                const possibleTags = [
+                    "return",
+                    "ns2:return", 
+                    "calculateBMIReturn",
+                    "calculateBMIResponse",
+                    "ns:calculateBMIReturn",
+                    "ns2:calculateBMIReturn",
+                    "tns:calculateBMIReturn"
+                ];
+
+                for (const tagName of possibleTags) {
+                    const element = xml.getElementsByTagName(tagName)[0];
+                    if (element && element.textContent) {
+                        resultText = element.textContent;
+                        break;
+                    }
+                }
+
+                if (!resultText) {
+                    resultText = "Error: Could not find result in SOAP response";
+                }
+
+                const resultDiv = document.getElementById('result');
+                
+                if (resultText.startsWith("SUCCESS|")) {
+                    const parts = resultText.split('|');
+                    if (parts.length >= 8) {
+                        resultDiv.innerHTML = `
+                            <div class="success-message">
+                                <h5>BMI Calculation Results:</h5>
+                                <p><strong>Name:</strong> ${parts[1]}</p>
+                                <p><strong>Gender:</strong> ${parts[2]}</p>
+                                <p><strong>Age:</strong> ${parts[3]} years</p>
+                                <p><strong>Weight:</strong> ${parts[6]} kg</p>
+                                <p><strong>Height:</strong> ${parts[7]} cm</p>
+                                <p><strong>BMI:</strong> ${parts[4]} (${parts[5]})</p>
+                            </div>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `<p class="error-message">Success response but invalid format: ${resultText}</p>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = `<p class="error-message">${resultText}</p>`;
+                }
+                
+                resultDiv.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
+                resultDiv.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

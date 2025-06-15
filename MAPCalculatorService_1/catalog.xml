@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8080/MAPCalculatorService/MAPService?WSDL" uri="src/conf/xml-resources/web-service-references/MAPService/wsdl/localhost_8080/MAPCalculatorService/MAPService.wsdl"/>
+    <system systemId="http://localhost:8080/MAPCalculatorService/MAPService?xsd=1" uri="src/conf/xml-resources/web-service-references/MAPService/wsdl/localhost_8080/MAPCalculatorService/MAPService.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/TDEECalculator/TDEECalculatorService?WSDL" uri="src/conf/xml-resources/web-service-references/TDEECalculatorService_1/wsdl/localhost_8080/TDEECalculator/TDEECalculatorService.wsdl"/>
+    <system systemId="http://localhost:8080/TDEECalculator/TDEECalculatorService?xsd=1" uri="src/conf/xml-resources/web-service-references/TDEECalculatorService_1/wsdl/localhost_8080/TDEECalculator/TDEECalculatorService.xsd_1.xsd"/>
+</catalog>
