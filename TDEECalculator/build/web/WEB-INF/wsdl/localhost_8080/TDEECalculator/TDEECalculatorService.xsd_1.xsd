@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is Metro/2.3.1-b419 (branches/2.3.1.x-7937; 2014-08-04T08:11:03+0000) JAXWS-RI/2.2.10-b140803.1500 JAXWS-API/2.2.11 JAXB-RI/2.2.10-b140802.1033 JAXB-API/2.2.12-b140109.1041 svn-revision#unknown. --><xs:schema xmlns:tns="http://TDEECalc.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://TDEECalc.com/">
+
+<xs:element name="calculateAgeFromIC" type="tns:calculateAgeFromIC"/>
+
+<xs:element name="calculateAgeFromICResponse" type="tns:calculateAgeFromICResponse"/>
+
+<xs:element name="calculateCalories" type="tns:calculateCalories"/>
+
+<xs:element name="calculateCaloriesResponse" type="tns:calculateCaloriesResponse"/>
+
+<xs:element name="calculateTDEEFromIC" type="tns:calculateTDEEFromIC"/>
+
+<xs:element name="calculateTDEEFromICResponse" type="tns:calculateTDEEFromICResponse"/>
+
+<xs:complexType name="calculateCalories">
+<xs:sequence>
+<xs:element name="arg0" type="xs:int"/>
+<xs:element name="arg1" type="xs:string" minOccurs="0"/>
+<xs:element name="arg2" type="xs:double"/>
+<xs:element name="arg3" type="xs:double"/>
+<xs:element name="arg4" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="calculateCaloriesResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="calculateAgeFromIC">
+<xs:sequence>
+<xs:element name="icNumber" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="calculateAgeFromICResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="calculateTDEEFromIC">
+<xs:sequence>
+<xs:element name="icNumber" type="xs:string" minOccurs="0"/>
+<xs:element name="personName" type="xs:string" minOccurs="0"/>
+<xs:element name="gender" type="xs:string" minOccurs="0"/>
+<xs:element name="height" type="xs:double"/>
+<xs:element name="weight" type="xs:double"/>
+<xs:element name="activityLevel" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="calculateTDEEFromICResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
